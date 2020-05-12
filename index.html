@@ -158,8 +158,8 @@
                                             <option value="">Choisir une devise</option>
                                             <option value="1">USD</option>
                                             <option value="2">JPY</option>
-                                            <option value=""></option>
-                                            <option value=""></option>
+                                            <option value="3">AUD</option>
+                                            <option value="4">CAD</option>
                                         </select>
                                         <button onclick="devise()" class="btn btn-primary clac1">Calc</button>
                                     </div>
@@ -332,6 +332,17 @@
                     case "2":
                         valRes = val * deviseRes['rates']['JPY'];
                         devName = "JPY";
+                        break;
+
+
+                    case "3":
+                        valRes = val * deviseRes['rates']['AUD'];
+                        devName = "AUD";
+                        break;
+
+                    case "4":
+                        valRes = val * deviseRes['rates']['CAD'];
+                        devName = "CAD";
                         break;
 
                     default:
