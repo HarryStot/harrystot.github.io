@@ -3,70 +3,581 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Portfolio</title>
-    <link rel="stylesheet" href="src/styles.css">
+    <title>Smart Plant Watering System</title>
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #8BC34A;
+            --accent-color: #00796B;
+            --background-color: #F5F5F5;
+            --card-color: #FFFFFF;
+            --text-color: #333333;
+            --border-radius: 8px;
+            --shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logo-icon {
+            font-size: 1.8rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem;
+            border-radius: var(--border-radius);
+            transition: background-color 0.3s;
+        }
+        
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .dashboard-title {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+        }
+        
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: #E8F5E9;
+            border-radius: var(--border-radius);
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #4CAF50;
+        }
+        
+        .plants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .plant-card {
+            background-color: var(--card-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        
+        .plant-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .plant-header {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #EEEEEE;
+        }
+        
+        .plant-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .plant-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .plant-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-color);
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+        
+        .plant-actions button:hover {
+            opacity: 1;
+        }
+        
+        .plant-image {
+            height: 150px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .plant-status {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.2rem 0.75rem;
+            border-top-left-radius: var(--border-radius);
+            font-size: 0.9rem;
+        }
+        
+        .status-warning {
+            background-color: #FF9800;
+        }
+        
+        .status-danger {
+            background-color: #F44336;
+        }
+        
+        .plant-data {
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .data-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .data-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            line-height: 1;
+            margin-bottom: 0.25rem;
+        }
+        
+        .data-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .moisture-bar {
+            height: 6px;
+            background-color: #EEEEEE;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .moisture-level {
+            height: 100%;
+            width: 70%;
+            background-color: var(--primary-color);
+        }
+        
+        .plant-controls {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #EEEEEE;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .auto-water {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 20px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: var(--primary-color);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+        
+        .water-now {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .water-now:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .system-overview {
+            margin-top: 3rem;
+        }
+        
+        .system-title {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+        
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .overview-card {
+            background-color: var(--card-color);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        
+        .overview-value {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .overview-label {
+            color: #666;
+        }
+        
+        .charts-section {
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .chart-container {
+            background-color: var(--card-color);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        
+        .chart-placeholder {
+            height: 300px;
+            background-color: #F5F5F5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #999;
+            border-radius: var(--border-radius);
+        }
+        
+        footer {
+            background-color: var(--accent-color);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .plants-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .overview-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            nav ul {
+                gap: 0.75rem;
+            }
+            
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            main {
+                padding: 0 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
-        <div class="container">
-            <h1>My Portfolio</h1>
-            <nav>
-                <ul>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#projects">Projects</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
+        <div class="logo">
+            <span class="logo-icon">🌱</span>
+            <span>PlantCare</span>
         </div>
+        <nav>
+            <ul>
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#">Plants</a></li>
+                <li><a href="#">Settings</a></li>
+                <li><a href="#">Help</a></li>
+            </ul>
+        </nav>
     </header>
     
-    <section id="about">
-        <div class="container">
-            <h2>About Me</h2>
-            <p>Welcome to my portfolio! I am a passionate developer with experience in HTML, CSS, and JavaScript.</p>
-        </div>
-    </section>
-    
-    <section id="projects">
-        <div class="container">
-            <h2>Projects</h2>
-            <div class="project">
-                <h3>Project 1</h3>
-                <p>Description of Project 1.</p>
-            </div>
-            <div class="project">
-                <h3>Project 2</h3>
-                <p>Description of Project 2.</p>
-            </div>
-            <div class="project">
-                <h3>Project 3</h3>
-                <p>Description of Project 3.</p>
+    <main>
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">My Plants Dashboard</h1>
+            <div class="system-status">
+                <div class="status-indicator"></div>
+                <span>System Online</span>
             </div>
         </div>
-    </section>
-    
-    <section id="contact">
-        <div class="container">
-            <h2>Contact Me</h2>
-            <form action="#" method="POST">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required>
-                
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-                
-                <label for="message">Message:</label>
-                <textarea id="message" name="message" required></textarea>
-                
-                <button type="submit">Send</button>
-            </form>
+        
+        <div class="plants-grid">
+            <!-- Plant 1 -->
+            <div class="plant-card">
+                <div class="plant-header">
+                    <h2 class="plant-title">Monstera Deliciosa</h2>
+                    <div class="plant-actions">
+                        <button title="Edit">✏️</button>
+                        <button title="Settings">⚙️</button>
+                    </div>
+                </div>
+                <div class="plant-image" style="background-image: url('/api/placeholder/400/320')">
+                    <div class="plant-status">Healthy</div>
+                </div>
+                <div class="plant-data">
+                    <div class="data-item">
+                        <div class="data-value">72%</div>
+                        <div class="data-label">Soil Moisture</div>
+                        <div class="moisture-bar">
+                            <div class="moisture-level" style="width: 72%"></div>
+                        </div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-value">24°C</div>
+                        <div class="data-label">Temperature</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-value">48%</div>
+                        <div class="data-label">Humidity</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-value">650</div>
+                        <div class="data-label">Light Level (lux)</div>
+                    </div>
+                </div>
+                <div class="plant-controls">
+                    <div class="auto-water">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span>Auto Water</span>
+                    </div>
+                    <button class="water-now">Water Now</button>
+                </div>
+            </div>
+            
+            <!-- Plant 2 -->
+            <div class="plant-card">
+                <div class="plant-header">
+                    <h2 class="plant-title">Peace Lily</h2>
+                    <div class="plant-actions">
+                        <button title="Edit">✏️</button>
+                        <button title="Settings">⚙️</button>
+                    </div>
+                </div>
+                <div class="plant-image" style="background-image: url('/api/placeholder/400/320')">
+                    <div class="plant-status status-warning">Needs Attention</div>
+                </div>
+                <div class="plant-data">
+                    <div class="data-item">
+                        <div class="data-value">38%</div>
+                        <div class="data-label">Soil Moisture</div>
+                        <div class="moisture-bar">
+                            <div class="moisture-level" style="width: 38%; background-color: #FF9800;"></div>
+                        </div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-value">23°C</div>
+                        <div class="data-label">Temperature</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-value">42%</div>
+                        <div class="data-label">Humidity</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-value">850</div>
+                        <div class="data-label">Light Level (lux)</div>
+                    </div>
+                </div>
+                <div class="plant-controls">
+                    <div class="auto-water">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span>Auto Water</span>
+                    </div>
+                    <button class="water-now">Water Now</button>
+                </div>
+            </div>
+            
+            <!-- Plant 3 -->
+            <div class="plant-card">
+                <div class="plant-header">
+                    <h2 class="plant-title">Snake Plant</h2>
+                    <div class="plant-actions">
+                        <button title="Edit">✏️</button>
+                        <button title="Settings">⚙️</button>
+                    </div>
+                </div>
+                <div class="plant-image" style="background-image: url('/api/placeholder/400/320')">
+                    <div class="plant-status">Healthy</div>
+                </div>
+                <div class="plant-data">
+                    <div class="data-item">
+                        <div class="data-value">62%</div>
+                        <div class="data-label">Soil Moisture</div>
+                        <div class="moisture-bar">
+                            <div class="moisture-level" style="width: 62%"></div>
+                        </div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-value">25°C</div>
+                        <div class="data-label">Temperature</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-value">35%</div>
+                        <div class="data-label">Humidity</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-value">720</div>
+                        <div class="data-label">Light Level (lux)</div>
+                    </div>
+                </div>
+                <div class="plant-controls">
+                    <div class="auto-water">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span>Auto Water</span>
+                    </div>
+                    <button class="water-now">Water Now</button>
+                </div>
+            </div>
         </div>
-    </section>
+        
+        <div class="system-overview">
+            <h2 class="system-title">System Overview</h2>
+            <div class="overview-grid">
+                <div class="overview-card">
+                    <div class="overview-value">3</div>
+                    <div class="overview-label">Connected Plants</div>
+                </div>
+                <div class="overview-card">
+                    <div class="overview-value">2.7L</div>
+                    <div class="overview-label">Water Used This Week</div>
+                </div>
+                <div class="overview-card">
+                    <div class="overview-value">85%</div>
+                    <div class="overview-label">Water Tank Level</div>
+                </div>
+                <div class="overview-card">
+                    <div class="overview-value">8</div>
+                    <div class="overview-label">Watering Events Today</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="charts-section">
+            <h2 class="system-title">Historical Data</h2>
+            <div class="chart-container">
+                <div class="chart-placeholder">
+                    Here will be a chart showing moisture levels over time
+                </div>
+            </div>
+        </div>
+    </main>
     
     <footer>
-        <div class="container">
-            <p>&copy; 2023 My Portfolio</p>
-        </div>
+        <p>PlantCare System &copy; 2025 - Powered by Raspberry Pi Pico W2</p>
     </footer>
 </body>
 </html>
